@@ -3,7 +3,6 @@ package middleware
 import (
 	"github.com/gin-gonic/gin"
 	ktMicro "github.com/rmine/ktMicro/util/responseUtil"
-	"ktMicro/pconst"
 )
 
 func ApiAuth() gin.HandlerFunc {
@@ -12,7 +11,7 @@ func ApiAuth() gin.HandlerFunc {
 		if ok {
 			c.Next()
 		} else {
-			ktMicro.ResponseJsonWithCode(c, nil, pconst.CodeCommonAccessFail)
+			ktMicro.ResponseJsonWithCode(c, nil, 1001)
 			c.Abort()
 		}
 	}
