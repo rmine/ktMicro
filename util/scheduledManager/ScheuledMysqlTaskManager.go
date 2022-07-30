@@ -2,7 +2,7 @@ package ktMicro
 
 import (
 	"github.com/rmine/ktMicro/util/ipUtil"
-	ktMicro "github.com/rmine/ktMicro/util/ktimer"
+	ktimer "github.com/rmine/ktMicro/util/ktimer"
 	"github.com/satori/go.uuid"
 	"math/rand"
 	"sort"
@@ -12,18 +12,18 @@ import (
 
 type ScheduledMysqlManager struct {
 	identifier     string
-	taskInfo       map[string]*ktMicro.KTimer
-	heartbeatTimer *ktMicro.KTimer
+	taskInfo       map[string]*ktimer.KTimer
+	heartbeatTimer *ktimer.KTimer
 }
 
 var syncMysqlOnce sync.Once
 var shareMysqlManager *ScheduledMysqlManager
-var scheuledMysqlTaskDao *ScheuledMysqlTaskModel
+var scheuledMysqlTaskDao *ScheduledMysqlTaskModel
 
 func DefaultScheduledMysqlManager() *ScheduledMysqlManager {
 	syncMysqlOnce.Do(func() {
 		shareMysqlManager = &ScheduledMysqlManager{
-			taskInfo: map[string]*ktMicro.KTimer{},
+			taskInfo: map[string]*ktimer.KTimer{},
 		}
 		scheuledMysqlTaskDao = NewScheuledTaskDao()
 		shareMysqlManager.genUniqueIdentifier()
@@ -46,20 +46,19 @@ func (m *ScheduledMysqlManager) genUniqueIdentifier() {
 
 func (m *ScheduledMysqlManager) initHeartbeat() {
 	if m.heartbeatTimer == nil {
-		m.heartbeatTimer = ktMicro.NewTimer(60, 0, m.heartbeat)
+		m.heartbeatTimer = ktimer.NewTimer(60, 0, m.heartbeat)
 		m.heartbeatTimer.Start()
 	}
 }
 
-func (m *ScheduledMysqlManager) heartbeat(timer *ktMicro.KTimer) {
+func (m *ScheduledMysqlManager) heartbeat(timer *ktimer.KTimer) {
 	unit, _ := scheuledMysqlTaskDao.QueryTaskWithIdentifier(m.identifier)
 	if unit == nil || unit.Id == 0 {
-		(&ScheuledMysqlTaskModel{UUid: m.identifier}).CreateNewTask()
+		(&ScheduledMysqlTaskModel{UUid: m.identifier}).CreateNewTask()
 	} else {
 		unit.UpdateTaskStatus(m.identifier)
 	}
 }
-
 /*
 taskName 任务名称
 spec cron
@@ -74,11 +73,11 @@ func (m *ScheduledMysqlManager) addTask(taskName string, spec string, interval f
 	if singleUnit {
 		block = m.wrapperBlock(block)
 	}
-	var timer *ktMicro.KTimer = nil
+	var timer *ktimer.KTimer = nil
 	if len(spec) > 0 {
-		timer = ktMicro.NewCronTimer(spec, block)
+		timer = ktimer.NewCronTimer(spec, block)
 	} else {
-		timer = ktMicro.NewTimer(interval, 0, block)
+		timer = ktimer.NewTimer(interval, 0, block)
 	}
 	timer.Start()
 	if len(taskName) > 0 {
@@ -87,8 +86,8 @@ func (m *ScheduledMysqlManager) addTask(taskName string, spec string, interval f
 	return true
 }
 
-func (m *ScheduledMysqlManager) wrapperBlock(block ktMicro.KTimerBlock) ktMicro.KTimerBlock {
-	return func(timer *ktMicro.KTimer) {
+func (m *ScheduledMysqlManager) wrapperBlock(block ktimer.KTimerBlock) ktimer.KTimerBlock {
+	return func(timer *ktimer.KTimer) {
 		if m.ValidateExecuteAuthority() {
 			block(timer)
 		}
@@ -129,7 +128,7 @@ interval 时间间隔 单位秒
 singleUnit 是否单机运行
 block block
 */
-func (m *ScheduledMysqlManager) AddTask(taskName string, interval float64, singleUnit bool, block ktMicro.KTimerBlock) bool {
+func (m *ScheduledMysqlManager) AddTask(taskName string, interval float64, singleUnit bool, block ktimer.KTimerBlock) bool {
 	return m.addTask(taskName, "", interval, singleUnit, block)
 }
 
