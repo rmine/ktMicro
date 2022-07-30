@@ -32,12 +32,9 @@ func handleResponse(c *gin.Context, data interface{}, code int, msg string) {
 	}
 
 	if gin.Mode() == gin.TestMode {
-		//s,_ := json.Marshal(result)
-		//todo
-		//go kwlog.PrintlogWithData("test info:", kwlog.LogInfo, string(s))
+		//todo record log
+		c.JSON(http.StatusOK, result)
 	} else {
 		c.JSON(http.StatusOK, result)
-		//todo
-		//go report(c,code,msg,result)
 	}
 }

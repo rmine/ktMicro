@@ -1,11 +1,9 @@
 package middleware
 
 import (
-	ktMicro "github.com/rmine/ktMicro/util/responseUtil"
 	"github.com/gin-gonic/gin"
 	"github.com/rmine/ktMicro/util/jwtAuth"
 	ktMicro "github.com/rmine/ktMicro/util/responseUtil"
-	"ktMicro/pconst"
 )
 
 //token格式: cookie/header ==>  Authorization: Bearer <token>
@@ -14,21 +12,21 @@ func JwtAuthMiddleware() gin.HandlerFunc {
 		//校验client里的token
 		_, claims, err := jwtAuth.AutoVerifyToken(c)
 		if err != nil {
-			ktMicro.ResponseJsonWithCode(c, nil, pconst.CodeCommonAccessFail)
+			ktMicro.ResponseJsonWithCode(c, nil, 1001)
 			c.Abort()
 			return
 		}
 		//获取用户信息
 		authInfo, err := jwtAuth.GetValidAuthInfo(claims)
 		if err != nil {
-			ktMicro.ResponseJsonWithCode(c, nil, pconst.CodeCommonAccessFail)
+			ktMicro.ResponseJsonWithCode(c, nil, 1001)
 			c.Abort()
 			return
 		}
 		//插入用户信息进上下文, 无值不阻塞
 		if authInfo != nil {
 			if authInfo.UserId > 0 {
-				c.Set(pconst.AuthUserId, authInfo.UserId)
+				//c.Set(pconst.AuthUserId, authInfo.UserId)
 			}
 			//if authInfo.UserInfo != nil {
 			//	c.Set(pconst.AuthUserInfo,authInfo.UserInfo)
