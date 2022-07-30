@@ -1,0 +1,18 @@
+MysqlClusters:
+  - Db: "test"
+    DBServer:
+      DBName: "test"
+      Write:
+        Host: "127.0.0.1"
+        Port: 3306
+        Username: "xxx_test"
+        Password: "xxxx"
+      Reads:
+        - Host: "127.0.0.1"
+          Port: 3306
+          Username: "xxx_test"
+          Password: "xxxx"
+      Pool:
+        MaxActive: 30
+        MaxIdle: 10
+        MaxWait: 20

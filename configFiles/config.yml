@@ -1,0 +1,4 @@
+AppConfig:
+  AppEnv: "develop" #develop #test #product
+  AppName: "ktMicro"
+  ServerPort: "6600"

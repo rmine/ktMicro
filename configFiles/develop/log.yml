@@ -1,0 +1,35 @@
+gin:
+  filePath: "./../data/logs/gin/"
+  fileName: "ktMicro_gin.log"
+  MaxSize:    20 # megabytes
+  MaxBackups: 3
+  MaxAge:     28 #days
+  Compress:   true
+mysql:
+  filePath: "./../data/logs/mysql/"
+  fileName: "ktMicro_mysql.log"
+  MaxSize:    20 # megabytes
+  MaxBackups: 3
+  MaxAge:     28 #days
+  Compress:   true
+redis:
+  filePath: "./../data/logs/redis/"
+  fileName: "ktMicro_redis.log"
+  MaxSize:    20 # megabytes
+  MaxBackups: 3
+  MaxAge:     28 #days
+  Compress:   true
+mongo:
+  filePath: "./../data/logs/mongo/"
+  fileName: "ktMicro_mongo.log"
+  MaxSize:    20 # megabytes
+  MaxBackups: 3
+  MaxAge:     28 #days
+  Compress:   true
+mq:
+  filePath: "./../data/logs/mq/"
+  fileName: "ktMicro_mq.log"
+  MaxSize:    20 # megabytes
+  MaxBackups: 3
+  MaxAge:     28 #days
+  Compress:   true
