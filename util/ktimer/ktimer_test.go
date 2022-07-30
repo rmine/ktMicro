@@ -1,4 +1,4 @@
-package ktMicro
+package ktimer
 
 import (
 	"fmt"
