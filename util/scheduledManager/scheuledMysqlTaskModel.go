@@ -7,7 +7,7 @@ import (
 )
 
 type ScheduledMysqlTaskModel struct {
-	configframe.Mysql
+	ktMicro.Mysql
 	Id        uint32    `json:"id" gorm:"column:id;type:int(10) unsigned auto_increment; NOT NULL; COMMENT:'id';primary_key;"`
 	UUid      string    `json:"uuid" gorm:"column:uuid;type:varchar(255); NOT NULL; COMMENT:'唯一标识';"`
 	TaskIP    string    `json:"task_ip" gorm:"column:task_ip;type:varchar(255); NOT NULL; COMMENT:'唯一标识';"`
